@@ -1,0 +1,17 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+const base = import.meta.env.BASE_URL;
+---
+<header>
+  <div class="container">
+    <nav>
+      <a href={base} class="site-name">ivan martinez</a>
+      <ul class="nav-links">
+        <li><a href={`${base}#projects`}>proyectos</a></li>
+        <li><a href={`${base}blog/`}>blogs</a></li>
+        <li><a href="https://github.com/pr4zka" target="_blank" rel="noopener">github</a></li>
+        <li><ThemeToggle /></li>
+      </ul>
+    </nav>
+  </div>
+</header>

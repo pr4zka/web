@@ -1,11 +1,100 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AsciiHero from '../components/AsciiHero.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const recentPublished = publishedPosts.slice(0, 3);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('es-PY', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const base = import.meta.env.BASE_URL;
+
+const projects = [
+  {
+    name: 'TDP',
+    desc: 'Empresa donde trabajo como Full Stack Developer construyendo aplicaciones web modernas.',
+    lang: 'TypeScript',
+    url: 'https://www.tdp.com.py',
+  },
+  {
+    name: 'quiniela.com.py',
+    desc: 'Plataforma del juego tradicional de quiniela paraguaya — apuestas, sorteos y resultados.',
+    lang: 'Web',
+    url: 'https://www.quiniela.com.py/',
+  },
+  {
+    name: 'lotengo.com.py',
+    desc: 'Plataforma de rifas y sorteos online.',
+    lang: 'Web',
+    url: 'https://app.lotengo.com.py/',
+  },
+];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout title="~/ivan martinez" description="Portafolio de Ivan Martinez — Full Stack Developer">
+  <div class="intro-wrapper">
+    <div class="container">
+      <section class="intro">
+        <div class="intro-text">
+          <AsciiHero />
+          <h1 class="intro-heading">devlog~</h1>
+          <span class="cat-mascot cat-mobile-only">
+            <img src={`${base}img/cat-light.webp`} alt="Mascota" class="cat-light" />
+            <img src={`${base}img/cat-dark.webp`} alt="Mascota" class="cat-dark" />
+          </span>
+          <p class="intro-bio">
+            Full Stack Developer en <a href="https://www.tdp.com.py">TDP</a>.
+            Construyo aplicaciones web con tecnologías modernas.
+          </p>
+        </div>
+        <div class="cat-mascot cat-desktop-only">
+          <img src={`${base}img/cat-light.webp`} alt="Mascota" class="cat-light" />
+          <img src={`${base}img/cat-dark.webp`} alt="Mascota" class="cat-dark" />
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="container">
+    <div class="now-block">
+      <span class="now-label">En qué estoy trabajando</span>
+      <p>Desarrollando este portafolio y explorando nuevas tecnologías web.</p>
+    </div>
+
+    <section id="projects">
+      <h2 class="section-heading">Proyectos</h2>
+      <ul class="projects-list">
+        {projects.map((project) => (
+          <li class="project-item">
+            <a href={project.url} target="_blank" rel="noopener noreferrer">
+              <span class="project-name">{project.name}</span>
+              <span class="project-lang">{project.lang}</span>
+            </a>
+            <p class="project-desc">{project.desc}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="writing">
+      <h2 class="section-heading">Blogs</h2>
+      <ul class="writing-list">
+        {recentPublished.map((post) => (
+          <li>
+            <a href={`${base}blog/${post.id}/`} class="writing-item">
+              <span class="writing-title">{post.data.title}</span>
+              <span class="writing-meta">{formatDate(post.data.date)}</span>
+              <p class="writing-desc">{post.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href={`${base}blog/`} class="view-all">Ver todo &rarr;</a>
+    </section>
+  </div>
+</BaseLayout>

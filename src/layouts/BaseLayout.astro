@@ -1,0 +1,74 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import CopyCode from '../components/CopyCode.astro';
+import TextScramble from '../components/TextScramble.astro';
+import ScrollSpark from '../components/ScrollSpark.astro';
+import ScrollTop from '../components/ScrollTop.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = '', ogImage } = Astro.props;
+const canonicalURL = Astro.url;
+const base = import.meta.env.BASE_URL;
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" href={`${base}img/favicon.ico`} />
+    <link rel="icon" type="image/png" sizes="16x16" href={`${base}img/favicon-16x16.png`} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${base}img/favicon-32x32.png`} />
+    <link rel="apple-touch-icon" href={`${base}img/apple-touch-icon.png`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <link rel="preload" href={`${base}fonts/source-serif-4-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${base}fonts/instrument-sans-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <ClientRouter />
+    <script is:inline>
+      (function() {
+        function applyTheme() {
+          const stored = localStorage.getItem('theme');
+          if (stored) {
+            document.documentElement.dataset.theme = stored;
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.theme = 'dark';
+          } else {
+            document.documentElement.dataset.theme = 'light';
+          }
+        }
+        applyTheme();
+        document.addEventListener('astro:after-swap', applyTheme);
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Ir al contenido</a>
+    <Nav />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+    <CopyCode />
+    <TextScramble />
+    <ScrollSpark />
+    <ScrollTop />
+  </body>
+</html>
