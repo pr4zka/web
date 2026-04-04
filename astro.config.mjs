@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://pr4zka.github.io',
-  base: '/web',
+  base: '/web/',
   output: 'static',
   integrations: [sitemap()],
   prefetch: true,
