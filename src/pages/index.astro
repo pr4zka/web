@@ -83,17 +83,21 @@ const projects = [
 
     <section id="writing">
       <h2 class="section-heading">Blogs</h2>
-      <ul class="writing-list">
-        {recentPublished.map((post) => (
-          <li>
-            <a href={`${base}blog/${post.id}/`} class="writing-item">
-              <span class="writing-title">{post.data.title}</span>
-              <span class="writing-meta">{formatDate(post.data.date)}</span>
-              <p class="writing-desc">{post.data.description}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
+      {recentPublished.length === 0 ? (
+        <p>Trying to get out of hell.</p>
+      ) : (
+        <ul class="writing-list">
+          {recentPublished.map((post) => (
+            <li>
+              <a href={`${base}blog/${post.id}/`} class="writing-item">
+                <span class="writing-title">{post.data.title}</span>
+                <span class="writing-meta">{formatDate(post.data.date)}</span>
+                <p class="writing-desc">{post.data.description}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
       <a href={`${base}blog/`} class="view-all">Ver todo &rarr;</a>
     </section>
   </div>
